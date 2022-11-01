@@ -3,6 +3,8 @@ from config import HEADERS, BASE_URL, HTML_URL, pagination
 from bs4 import BeautifulSoup
 import json
 from tools import encode_url, decode_url
+import urllib.parse
+import sys
 
 
 def get_map_zoom(url):
@@ -19,19 +21,24 @@ def map_bounds_from_url(url):
     map_bounds = map_bounds.replace('{', '')
     map_bounds = map_bounds.replace('}', '')
     map_bounds = map_bounds.split(',')
-    print(map_bounds)
     map_bounds = [float(i.split(':')[1]) for i in map_bounds]
-    print(map_bounds)
     return map_bounds
 
 
 def get_offers_count(url):
     responce = requests.get(url, headers=HEADERS)
-    print(responce)
-    soup = BeautifulSoup(responce.text, 'html.parser')
-    offers_count = soup.find('button', {'class': 'option'}).find('div').text.replace(',', '')
-    print(offers_count)
-    return int(offers_count)
+    if responce.status_code == 200:
+        print('Successfull connection')
+        soup = BeautifulSoup(responce.text, 'html.parser')
+        offers_count = soup.find('button', {'class': 'option'}).find('div').text.replace(',', '')
+        if int(offers_count) > 800:
+            print('800 offers found (max limit is 800)')
+        else:
+            print(f'{offers_count} offers found (max limit is 800)')
+        return int(offers_count)
+    print('Error, status code: ', responce.status_code, 'please, try again later')
+    sys.exit()
+
 
 def get_pages_count(url, offers_count, offers_per_page=40):
     pages_count = offers_count // offers_per_page
@@ -49,7 +56,7 @@ def create_pagination(page: int, west, east, south, north) -> str:
 def create_querry(pagination):
     query = {
         'searchQueryState': pagination,
-        'wants': '{"cat1":["mapResults"]}',
+        'wants': '{"cat1":["listResults"]}',
         'requestId': '0',
     }
     return query
@@ -57,11 +64,9 @@ def create_querry(pagination):
 
 
 def parse_json(url, query):
-    print(url+str(query)[2:-1])
-    responce = requests.get(url+str(query)[2:-1], headers=HEADERS)
-    print(responce.url)
+    url = url + '?' + urllib.parse.urlencode(query)
+    responce = requests.get(url.replace('+', ''), headers=HEADERS)
     return responce.text
-
 
 
 def get_results():

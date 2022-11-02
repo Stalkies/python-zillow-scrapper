@@ -1,3 +1,18 @@
+from sys import exit
+
+
+
+db_user = 'root'
+db_password = '602364'
+db_name = 'zillowdb'
+db_host = 'localhost'
+db_port = 3306
+
+
+
+
+
+
 HEADERS = {
     'authority': 'www.zillow.com',
     'sec-ch-ua': '"Google Chrome";v="89", "Chromium";v="89", ";Not A Brand";v="99"',
@@ -16,20 +31,15 @@ HEADERS = {
     'accept-language': 'en-US,en;q=0.9',
 }
 
+while True:
+    HTML_URL = input('Enter url to parse. Type exit to exit: ')
+    if HTML_URL == 'exit':
+        exit()
+    if 'https://www.zillow.com/' in HTML_URL:
+        break
+    else:
+        print('Please, enter correct url')
 
-HTML_URL = 'https://www.zillow.com/homes/for_sale/7_p/?searchQueryState=%7B%22pagination%22%3A%7B%22currentPage%22%3A7%7D%2C%22mapBounds%22%3A%7B%22west%22%3A-76.72774553874132%2C%22east%22%3A-74.39315081217882%2C%22south%22%3A39.310377933637085%2C%22north%22%3A40.50073141056311%7D%2C%22mapZoom%22%3A9%2C%22isMapVisible%22%3Atrue%2C%22filterState%22%3A%7B%22ah%22%3A%7B%22value%22%3Atrue%7D%2C%22sort%22%3A%7B%22value%22%3A%22globalrelevanceex%22%7D%7D%2C%22isListVisible%22%3Atrue%7D'
+
 MAX_PAGES_COUNT = 20
 BASE_URL = f'https://www.zillow.com/search/GetSearchPageState.htm'
-
-
-
-
-pagination = {
-    "pagination":{"currentPage":2},
-              "mapBounds":{"north":40.16128676572674,
-                           "east":-74.59832354931639,
-                           "south":40.01288127290741,"west":-74.9007908955078},
-              "mapZoom":12,"isMapVisible":True,
-              "filterState":{"isAllHomes":{"value":True},
-                             "sortSelection":{"value":"globalrelevanceex"}},
-              "isListVisible":True}

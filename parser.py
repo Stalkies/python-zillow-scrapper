@@ -3,6 +3,8 @@ from json import loads
 from mysql import save_data
 from scrapper import get_results
 
+from os import system
+
 #result = result['cat1']['searchResults']['listResults'] if result['cat1']['searchResults']['listResults'] else []
 def get_data(results):
     data = []
@@ -52,6 +54,7 @@ def main():
     data = get_data(results)
     results = parse_data_to_list(data)
     save_data(results)
+    system('pause')
 
 
 if __name__ == '__main__':

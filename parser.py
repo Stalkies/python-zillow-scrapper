@@ -13,7 +13,6 @@ def get_data(results):
         result = loads(result)
         if f'cat{i}' in result:
             if result[f'cat{i}']['searchResults']['listResults']:
-                print('append')
                 result = result[f'cat{i}']['searchResults']['listResults']
                 data.append(result)
                 continue
@@ -53,7 +52,6 @@ def main():
     data = get_data(results)
     results = parse_data_to_list(data)
     save_data(results)
-    print(len(results), 'offers were saved')
 
 
 if __name__ == '__main__':
